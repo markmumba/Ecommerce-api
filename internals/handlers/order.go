@@ -1,11 +1,12 @@
 package handlers
 
 import (
+	"errors"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/markmumba/fiber-api/database"
-	"github.com/markmumba/fiber-api/internals/models"
+	"github.com/markmumba/ecommerceapp/database"
+	"github.com/markmumba/ecommerceapp/internals/models"
 )
 
 type OrderSerializer struct {
@@ -44,4 +45,58 @@ func CreateOrder(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(responseOrder)
 
+}
+
+func GetOrders(c *fiber.Ctx) error {
+
+	orders := []models.Order{}
+
+	database.Database.DB.Find(&orders)
+
+	var orderlist []OrderSerializer
+
+	for _, order := range orders {
+		var user models.User
+		var product models.Product
+
+		database.Database.DB.Find(&user, "id=?", order.UserRefer)
+		database.Database.DB.Find(&product, "id=?", order.ProductRefer)
+		responseOrder := CreateSerialOrder(order, CreateSerialUser(user), CreateSerialProduct(product))
+
+		orderlist = append(orderlist, responseOrder)
+
+	}
+
+	return c.Status(200).JSON(orderlist)
+
+}
+
+func FindOrder(id int, order *models.Order) error {
+	database.Database.DB.Find(&order, "id=?", id)
+	if order.ID == 0 {
+		return errors.New("no order of that id")
+	}
+
+	return nil
+}
+
+func GetOrder(c *fiber.Ctx) error {
+	var order models.Order
+
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		c.Status(400).JSON("no id given")
+	}
+	err = FindOrder(id, &order)
+
+	var user models.User
+	var product models.Product
+
+	database.Database.DB.First(&user, order.UserRefer)
+	database.Database.DB.First(&product, order.ProductRefer)
+	responseUser := CreateSerialUser(user)
+	responseProduct := CreateSerialProduct(product)
+	responseOrder := CreateSerialOrder(order, responseUser, responseProduct)
+
+	return c.Status(200).JSON(responseOrder)
 }

@@ -4,18 +4,20 @@ import (
 	"errors"
 
 	fiber "github.com/gofiber/fiber/v2"
-	"github.com/markmumba/fiber-api/database"
-	"github.com/markmumba/fiber-api/internals/models"
+	"github.com/markmumba/ecommerceapp/database"
+	"github.com/markmumba/ecommerceapp/internals/models"
 )
 
 type ProductSerializer struct {
 	ID           uint   `json:"id"`
 	Name         string `json:"name"`
+	Image        string `json:"image"`
+	Description  string `json:"description"`
 	SerialNumber string `json:"serial_number"`
 }
 
 func CreateSerialProduct(product models.Product) ProductSerializer {
-	return ProductSerializer{ID: product.ID, Name: product.Name, SerialNumber: product.SerialNumber}
+	return ProductSerializer{ID: product.ID, Name: product.Name, Image: product.Image, Description: product.Description, SerialNumber: product.SerialNumber}
 }
 
 func AddProduct(c *fiber.Ctx) error {
@@ -26,7 +28,7 @@ func AddProduct(c *fiber.Ctx) error {
 		c.Status(400).JSON(err.Error())
 	}
 
-	database.Database.DB.Create(product)
+	database.Database.DB.Create(&product)
 	responseProduct := CreateSerialProduct(product)
 
 	return c.Status(200).JSON(responseProduct)

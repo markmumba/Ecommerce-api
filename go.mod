@@ -1,4 +1,4 @@
-module github.com/markmumba/fiber-api
+module github.com/markmumba/ecommerceapp
 
 go 1.21.4
 

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/markmumba/fiber-api/internals/handlers"
+	"github.com/markmumba/ecommerceapp/internals/handlers"
 )
 
 func SetupUserRoutes(router fiber.Router) {

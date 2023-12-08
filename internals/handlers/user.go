@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/markmumba/fiber-api/database"
-	"github.com/markmumba/fiber-api/internals/models"
+	"github.com/markmumba/ecommerceapp/database"
+	"github.com/markmumba/ecommerceapp/internals/models"
 )
 
 type UserSerializer struct {

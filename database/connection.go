@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/markmumba/fiber-api/config"
-	"github.com/markmumba/fiber-api/internals/models"
+	"github.com/markmumba/ecommerceapp/config"
+	"github.com/markmumba/ecommerceapp/internals/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -30,12 +30,12 @@ func ConnectDB() {
 	}
 
 	database_string := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode= disable", config.Config("DB_HOST"), port, config.Config("DB_USER"), config.Config("DB_NAME"))
-	db,err := gorm.Open(postgres.Open(database_string))
+	db, err := gorm.Open(postgres.Open(database_string))
 	if err != nil {
 		log.Fatal("Failed to connect to the database! \n ", err.Error())
 		os.Exit(2)
 	}
-	db.AutoMigrate(&models.User{},&models.Product{},&models.Order{})
+	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Order{})
 
 	Database = DatabaseInstance{DB: db}
 

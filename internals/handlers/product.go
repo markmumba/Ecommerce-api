@@ -91,8 +91,11 @@ func UpdateProduct(c *fiber.Ctx) error {
 
 	type UpdateProduct struct {
 		Name         string `json:"name"`
+		Image  string 	`json:"image"`
+		Description  string `json:"description"`
 		SerialNumber string `json:"serial_number"`
 	}
+
 	var updateproduct UpdateProduct
 
 	if err := c.BodyParser(&updateproduct); err != nil {
@@ -100,7 +103,11 @@ func UpdateProduct(c *fiber.Ctx) error {
 	}
 
 	product.Name = updateproduct.Name
+	product.Image = updateproduct.Image
+	product.Description = updateproduct.Description
 	product.SerialNumber = updateproduct.SerialNumber
+
+	database.Database.DB.Save(&product)
 
 	responseProduct := CreateSerialProduct(product)
 
